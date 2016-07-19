@@ -16,8 +16,9 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;        // set our port
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/myapp');
+mongoose.connect('mongodb://localhost/myapp'); //'myapp' is the name of the db, that will be created if it doesnt already exist
 
+//models
 var Question     = require('./app/models/question');
 //our answer model is being imported
 var Answer     = require('./app/models/answer');
@@ -39,7 +40,8 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
-// on routes that end in /bears
+// on routes that end in /questions
+//api for accesing questions
 // ----------------------------------------------------
 router.route('/questions')
 
@@ -47,7 +49,7 @@ router.route('/questions')
     .post(function(req, res) {
 
         var question = new Question();      // create a new instance of the Bear model
-        question.questionText = req.body.text;  // set the bears name (comes from the request)
+        question.questionText = req.body.questionText;  // set the bears name (comes from the request)
         //question.qid= req.body.qid; //text is just a silly placeholder for whetever you call it in the postman
         // save the bear and check for errors
         question.save(function(err) {
@@ -56,10 +58,9 @@ router.route('/questions')
 
             res.json({ message: 'Question created!' });
         });
-
     })
 
-    // get all the bears (accessed at GET http://localhost:8080/api/bears)
+    // get all the bears (accessed at GET http://localhost:8080/api/questions)
     .get(function(req, res) {
         Question.find(function(err, questions) {
             if (err)
@@ -69,9 +70,8 @@ router.route('/questions')
         });
     });
 
-
-
-    // on routes that end in /bears/:bear_id
+// on routes that end in /questions/:q_id
+//for ourselves if we want to access a bear through it's id in the URL
 // ----------------------------------------------------
 router.route('/questions/:q_id')
 
@@ -85,18 +85,19 @@ router.route('/questions/:q_id')
     })
 
 
-    // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
+    //this is if we want to update a question's text
+    // update the bear with this id (accessed at PUT http://localhost:8080/api/questions/:q_id)
   .put(function(req, res) {
 
-      // use our bear model to find the bear we want
+      // use our question model to find the question we want
       Question.findById(req.params.q_id, function(err, question) {
 
           if (err)
               res.send(err);
 
-          question.questionText = req.body.text;  // update the bears info
+          question.questionText = req.body.text;  // update the question info
 
-          // save the bear
+          // save the question
           question.save(function(err) {
               if (err)
                   res.send(err);
@@ -107,8 +108,8 @@ router.route('/questions/:q_id')
       });
   })
 
-
-  // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
+  //if we want to delete a question
+  // delete the bear with this id (accessed at DELETE http://localhost:8080/api/questions/:q_id)
     .delete(function(req, res) {
         Question.remove({
             _id: req.params.q_id
@@ -122,14 +123,14 @@ router.route('/questions/:q_id')
 
 
 //OUR ANSWERS ROUTES - WHICH WILL RETURN ALL ANSWERS AND ALLOW US TO ADD AN ANSWER
-// api/answers - is our route :?)
+// api/answers - is our route :)
 //lets start by - creating functionality to add a vote / answer
 // more routes for our API will happen here
-// on routes that end in /bears
+// on routes that end in /answers
 // ----------------------------------------------------
 router.route('/answers')
 
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
+    // create a bear (accessed at POST http://localhost:8080/api/answers)
     .post(function(req, res) {
 
         var answer = new Answer();      // create a new instance of the Answer model
@@ -148,7 +149,8 @@ router.route('/answers')
 
     })
 
-    // get all the bears (accessed at GET http://localhost:8080/api/bears)
+    //get all the answers in teh db
+    // get all the bears (accessed at GET http://localhost:8080/api/answers)
     .get(function(req, res) {
         Answer.find(function(err, answers) {
             if (err)
@@ -160,16 +162,16 @@ router.route('/answers')
 
 
 
-
 ///QUERY TEST FUNCTIONS GO HERE
-
+// a query api to query our ansers by date
 router.route('/query-ans')
 
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
+    // create a bear (accessed at POST http://localhost:8080/api/answers)
+    //returns all questions recorded on the selected ddate
     .post(function(req, res) {
 
         var answer = new Answer();      // create a new instance of the Answer model
-        var selectedDate = req.body.selectedDate;  // set the bears name (comes from the request)
+        var selectedDate = req.body.selectedDate;  // set the answer's date  (comes from the request)
         // answer.response = req.body.response;
         // answer.time = req.body.time;
         // answer.date = req.body.date;
@@ -190,10 +192,10 @@ router.route('/query-ans')
 
     })
 
-    // get all the bears (accessed at GET http://localhost:8080/api/bears)
+    //  a test function that  gets answers logged at a specific date and bewtween certain times
+    //get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
-        // var date = req.body.selectedDate;
-        // Answer.find({ date: "14/7/2016", time: 15.21 },function(err, answers) {
+
         Answer.find({ date: "15/7/2016", time: {$gte: 12 , $lte: 12.50 } },function(err, answers) {
             if (err)
                 res.send(err);
@@ -203,7 +205,7 @@ router.route('/query-ans')
     });
 
 
-    //to query for final results - date and time
+    //to query for final results - date and time - as params
     router.route('/final-query')
 
         // create a bear (accessed at POST http://localhost:8080/api/bears)
@@ -213,17 +215,7 @@ router.route('/query-ans')
             var selectedDate = req.body.selectedDate;  // set the bears name (comes from the request)
             var time = req.body.time;
             var offset = time + 1;
-            // answer.response = req.body.response;
-            // answer.time = req.body.time;
-            // answer.date = req.body.date;
-            //question.qid= req.body.qid; //text is just a silly placeholder for whetever you call it in the postman
-            // save the bear and check for errors
-            // answer.save(function(err) {
-            //     if (err)
-            //         res.send(err);
-            //
-            //     res.json({ message: 'Answer Logged!' });
-            // });
+
             Answer.find({ date:selectedDate, time: {$gte: time , $lte: offset }  },function(err, answers) {
                 if (err)
                     res.send(err);
@@ -231,54 +223,30 @@ router.route('/query-ans')
                 res.json(answers);
             });
 
-        })
-
-        // get all the bears (accessed at GET http://localhost:8080/api/bears)
-        .get(function(req, res) {
-            // var date = req.body.selectedDate;
-            // Answer.find({ date: "14/7/2016", time: 15.21 },function(err, answers) {
-            Answer.find({ date: "15/7/2016", time: {$gte: 12 , $lte: 12.50 } },function(err, answers) {
-                if (err)
-                    res.send(err);
-
-                res.json(answers);
-            });
         });
 
 
+
         //to get a single question by id
+        //takes an id in the body, searches for question that matches and returns the question's text
+        router.route('/get-q')
 
-                //to get a single question by id
-                //to query for final results - date and time
-                router.route('/get-q')
+        // create a bear (accessed at POST http://localhost:8080/api/bears)
+        .post(function(req, res) {
 
-                // create a bear (accessed at POST http://localhost:8080/api/bears)
-                .post(function(req, res) {
+            var q_id = req.body.q_id;
+            Question.findById(q_id, function(err, question) {
+                if (err)
+                    res.send(err);
+                //handeling null values, so that we will not be passing null values to other methods
+                if(question == null)
+                {
+                  console.log('im null ooo'); //just letting me know
+                }
+              else{ res.json(question);}
+            });
 
-                    var q_id = req.body.q_id;
-                    Question.findById(q_id, function(err, question) {
-                        if (err)
-                            res.send(err);
-                        if(question == null)
-                        {
-                          console.log('im null ooo');
-                        }
-                      else{ res.json(question.questionText);}
-                    });
-
-                })
-
-                // get all the bears (accessed at GET http://localhost:8080/api/bears)
-                .get(function(req, res) {
-                    // var date = req.body.selectedDate;
-                    // Answer.find({ date: "14/7/2016", time: 15.21 },function(err, answers) {
-                    Answer.find({ date: "15/7/2016", time: {$gte: 12 , $lte: 12.50 } },function(err, answers) {
-                        if (err)
-                            res.send(err);
-
-                        res.json(answers);
-                    });
-                });
+        });
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
