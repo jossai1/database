@@ -16,7 +16,9 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8095;        // set our port
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/myapp'); //'myapp' is the name of the db, that will be created if it doesnt already exist
+//not working on ssh so changing to below mongoose.connect('mongodb://localhost/myapp'); //'myapp' is the name of the db, that will be created if it doesnt already exist
+mongoose.connect('mongodb://127.0.0.1/myapp');
+
 
 //models
 var Question     = require('./app/models/question');
