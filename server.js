@@ -13,7 +13,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+var port = process.env.PORT || 8095;        // set our port
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/myapp'); //'myapp' is the name of the db, that will be created if it doesnt already exist
