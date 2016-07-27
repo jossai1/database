@@ -1,9 +1,9 @@
 #Test Meeting
-*running server : type node server.js
+* This is my database for developmnet purposes 
+* running server : type node server.js
 *install postman
 * set up your own local mongoDB called myapp
 * run your db
-* https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4#want-more-meansetting-up-a-mean-stack-single-page-applicationbuild-a-restful-api-using-node-and-express-4using-gruntjs-in-a-mean-stack-applicationauthenticate-a-node-api-with-tokens
-
-
+* you can now connect your app to make use of your server 
 follow aboive link for more deets..will put more deets soon
+
