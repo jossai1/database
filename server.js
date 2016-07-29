@@ -19,7 +19,7 @@ res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 next();
 });
 
-var port = process.env.PORT || 8080;        // set our port
+var port = process.env.PORT || 8095;        // set our port
 
 var mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost/myapp');
