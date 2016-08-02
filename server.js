@@ -19,13 +19,12 @@ res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 next();
 });
 
-var port = process.env.PORT || 8095;        // set our port
+var port = process.env.PORT || 8096;        // set our port
 
 var mongoose = require('mongoose');
-//not working on ssh so changing to below mongoose.connect('mongodb://localhost/myapp'); //'myapp' is the name of the db, that will be created if it doesnt already exist
-mongoose.connect('mongodb://127.0.0.1/myapp');
-//mongoose.connect('mongodb://jossai1:ella2469@ds029715.mlab.com:29715/surveydb');
-
+// mongoose.connect('mongodb://localhost/myapp');
+//for production
+mongoose.connect('mongodb://127.0.0.1/pre-prodDB');
 
 
 //models
@@ -148,6 +147,7 @@ router.route('/answers')
         answer.response = req.body.response;
         answer.time = req.body.time;
         answer.date = req.body.date;
+        answer.mtgRoom = req.body.mtgRoom;
         //question.qid= req.body.qid; //text is just a silly placeholder for whetever you call it in the postman
         // save the bear and check for errors
         answer.save(function(err) {
