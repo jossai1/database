@@ -237,6 +237,30 @@ router.route('/query-ans')
 
 
 
+        //to query for final results - date and time - as params
+        router.route('/advanced-query')
+
+            // create a bear (accessed at POST http://localhost:8080/api/bears)
+            .post(function(req, res) {
+
+                var answer = new Answer();
+                var selectedDate = req.body.date;     // create a new instance of the Answer model
+                var startTime = req.body.startTime;  // set the bears name (comes from the request)
+                var endTime = req.body.endTime;
+                var selectedMtgRoom = req.body.mtgRoom;
+
+
+                Answer.find({ mtgRoom:selectedMtgRoom, date:selectedDate, time: {$gte: startTime , $lte: endTime }  },function(err, answers) {
+                    if (err)
+                        res.send(err);
+
+                    res.json(answers);
+                });
+
+            });
+
+
+
         //to get a single question by id
         //takes an id in the body, searches for question that matches and returns the question's text
         router.route('/get-q')
